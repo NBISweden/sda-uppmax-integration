@@ -10,9 +10,6 @@ import (
 	"github.com/NBISweden/sda-uppmax-integration/helpers"
 )
 
-var Username = "uppmax"
-var Password = "uppmax"
-
 type tokenRequest struct {
 	Swamid    string `json:"swamid"`
 	ProjectID string `json:"projectid"`
@@ -47,6 +44,10 @@ func GetToken(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusInternalServerError)
 		fmt.Fprintln(w, string(currentError))
 	}
+
+	// Check specified swam_id against project_id
+
+	// Create token for user corresponding to specified swam_id
 
 	response, _ := json.Marshal(tokenRequest)
 
