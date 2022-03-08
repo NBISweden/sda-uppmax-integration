@@ -106,6 +106,7 @@ func BasicAuth(next http.HandlerFunc) http.HandlerFunc {
 
 			if usernameMatch && passwordMatch {
 				next.ServeHTTP(w, r)
+
 				return
 			}
 		}
