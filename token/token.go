@@ -67,9 +67,9 @@ func createECToken(key *ecdsa.PrivateKey, username string) (string, error) {
 	claims := make(jwt.MapClaims)
 	claims["iss"] = helpers.Config.Iss
 
-	token.Claims = claims
 	claims["exp"] = time.Now().AddDate(0, 0, helpers.Config.ExpirationDays).Unix()
 	claims["sub"] = username
+	token.Claims = claims
 
 	// create token
 	tokenString, err := token.SignedString(key)
@@ -96,7 +96,7 @@ func createS3Config(username string) (s3config string, expiration string, err er
 		log.Error(err)
 	}
 
-	expiration = time.Now().AddDate(0, 0, 14).Format("01-02-2006 15:04:05")
+	expiration = time.Now().AddDate(0, 0, helpers.Config.ExpirationDays).Format("01-02-2006 15:04:05")
 	s3config += "secret_key = " + username + "\naccess_key = " + username + "\naccess_token = " + token +
 		"\nhost_base = " + helpers.Config.S3URL + "\nhost_bucket = " + helpers.Config.S3URL
 

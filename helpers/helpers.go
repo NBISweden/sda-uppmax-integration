@@ -66,6 +66,11 @@ func NewConf(conf *Conf) (err error) {
 	conf.Username = viper.GetString("global.uppmaxUsername")
 	conf.Password = viper.GetString("global.uppmaxPassword")
 	conf.S3URL = viper.GetString("global.s3url")
+	if !viper.IsSet("global.expirationDays") {
+		conf.ExpirationDays = 14
+	} else {
+		conf.ExpirationDays = viper.GetInt("global.expirationDays")
+	}
 
 	return nil
 }

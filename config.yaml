@@ -4,3 +4,4 @@ global:
   uppmaxUsername: ""
   uppmaxPassword: ""
   s3url: ""
+  expirationDays: 0
