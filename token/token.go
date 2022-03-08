@@ -16,15 +16,6 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
-/* var TokenClaims = map[string]interface{}{
-	"sub": &userName,
-	"iss": &iss,
-	"iat": time.Now().Add(time.Second * 10).Unix(),
-} */
-
-type token struct {
-}
-
 type tokenRequest struct {
 	Swamid    string `json:"swamid"`
 	ProjectID string `json:"projectid"`
