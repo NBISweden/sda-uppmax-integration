@@ -1,0 +1,6 @@
+global:
+  iss: ""
+  pathToKey: ""
+  uppmaxUsername: ""
+  uppmaxPassword: ""
+  s3url: ""
