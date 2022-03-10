@@ -45,9 +45,9 @@ go run .
 The following configuration is required to run the service
 | Variable     | Description  | Example |
 | ------------ | :----------: | ------: |
-| iss | JWT issuer | `https://login.test.ega.nbis.se` |
+| iss | JWT issuer | `https://issuer.example.com` |
 | pathToKey | Path to private key | `../my_key.pem` |
 | uppmaxUsername | Username for token requester | `some_username` |
 | uppmaxPassword | Password for token requester | `some_password` |
-| s3url | The URL to the s3Inbox | `inbox.test.ega.nbis.se` |
+| s3url | The URL to the s3Inbox | `s3.example.com` |
 | expirationDays | Token validity duration in days | 14 |

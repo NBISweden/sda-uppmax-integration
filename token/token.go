@@ -72,8 +72,8 @@ func createECToken(key *ecdsa.PrivateKey, username string) (string, error) {
 
 func createS3Config(username string) (s3config string, expiration string, err error) {
 	s3config = "guess_mime_type = True \nhuman_readable_sizes = True\nuse_https = True\n" +
-		"multipart_chunk_size_mb = 50\n" + "check_ssl_certificate = False\n" +
-		"check_ssl_hostname = False\n" + "encoding = UTF-8\n" + "encrypt = False\n" +
+		"multipart_chunk_size_mb = 50\n" + "check_ssl_certificate = True\n" +
+		"check_ssl_hostname = True\n" + "encoding = UTF-8\n" + "encrypt = False\n" +
 		"socket_timeout = 30\n"
 
 	token, err := createECToken(helpers.Config.ParsedKey, username)
