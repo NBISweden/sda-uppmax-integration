@@ -12,6 +12,7 @@ import (
 
 type TestSuite struct {
 	suite.Suite
+	PrivateKeyPath string
 }
 
 func TestConfigTestSuite(t *testing.T) {
@@ -19,7 +20,7 @@ func TestConfigTestSuite(t *testing.T) {
 }
 
 func (suite *TestSuite) SetupTest() {
-
+	suite.PrivateKeyPath, _ = CreateECkeys(os.TempDir())
 }
 
 func (suite *TestSuite) TestCreateErrorResponse() {
@@ -33,7 +34,7 @@ func (suite *TestSuite) TestCreateErrorResponse() {
 func (suite *TestSuite) TestNewConf() {
 	confData := `global:
   iss: "https://some.url"
-  pathToKey: "../dev_utils/dummy.ec.nbis.se"
+  pathToKey: "` + suite.PrivateKeyPath + `"
   uppmaxUsername: "user"
   uppmaxPassword: "password"
   s3url: "some.s3.url"
@@ -54,13 +55,14 @@ func (suite *TestSuite) TestNewConf() {
 
 func (suite *TestSuite) TestNewConfMissingValue() {
 	confData := `global:
-  pathToKey: "../dev_utils/dummy.ec.nbis.se"
+  pathToKey: "` + suite.PrivateKeyPath + `"
   uppmaxUsername: "user"
   uppmaxPassword: "password"
   s3url: "some.s3.url"
   expirationDays: 14
   egaUser: "some-user"
 `
+
 	configName := "config.yaml"
 	err := ioutil.WriteFile(configName, []byte(confData), 0600)
 	if err != nil {
@@ -97,11 +99,12 @@ func (suite *TestSuite) TestNewConfMissingKey() {
 
 func (suite *TestSuite) TestParsePrivateECKey() {
 
-	keyPath := "../dev_utils/dummy.ec.nbis.se"
-	_, err := parsePrivateECKey(keyPath)
+	_, err := parsePrivateECKey(suite.PrivateKeyPath)
 	assert.NoError(suite.T(), err)
 
-	keyPath = "some/path"
-	_, err = parsePrivateECKey(keyPath)
+	privateKeyPath := "some/path"
+	_, err = parsePrivateECKey(privateKeyPath)
 	assert.EqualError(suite.T(), err, "open some/path: no such file or directory")
+
+	defer os.Remove(privateKeyPath)
 }

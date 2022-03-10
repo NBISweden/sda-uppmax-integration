@@ -15,6 +15,7 @@ import (
 
 type TestSuite struct {
 	suite.Suite
+	PrivateKeyPath string
 }
 
 func TestConfigTestSuite(t *testing.T) {
@@ -22,7 +23,7 @@ func TestConfigTestSuite(t *testing.T) {
 }
 
 func (suite *TestSuite) SetupTest() {
-
+	suite.PrivateKeyPath, _ = helpers.CreateECkeys(os.TempDir())
 }
 
 func (suite *TestSuite) TestNewConf() {
@@ -64,7 +65,7 @@ func (suite *TestSuite) TestCreateECToken() {
 
 	confData := `global:
   iss: "https://some.url"
-  pathToKey: "../dev_utils/dummy.ec.nbis.se"
+  pathToKey: "` + suite.PrivateKeyPath + `"
   uppmaxUsername: "user"
   uppmaxPassword: "password"
   s3url: "some.s3.url"
