@@ -13,7 +13,6 @@ import (
 
 	"github.com/NBISweden/sda-uppmax-integration/helpers"
 	"github.com/golang-jwt/jwt"
-	log "github.com/sirupsen/logrus"
 )
 
 type tokenRequest struct {
@@ -65,7 +64,7 @@ func createECToken(key *ecdsa.PrivateKey, username string) (string, error) {
 	// create token
 	tokenString, err := token.SignedString(key)
 	if err != nil {
-		return "no-token", err
+		return "", err
 	}
 
 	return tokenString, nil
@@ -79,7 +78,7 @@ func createS3Config(username string) (s3config string, expiration string, err er
 
 	token, err := createECToken(helpers.Config.ParsedKey, username)
 	if err != nil {
-		log.Error(err)
+		return "", "", err
 	}
 
 	expiration = time.Now().AddDate(0, 0, helpers.Config.ExpirationDays).Format("01-02-2006 15:04:05")
