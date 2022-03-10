@@ -3,7 +3,7 @@
 ## Introduction
 
 The SDA Uppmax Integration is a service used in the Sensitive Data Archive project. The goal of the project is to automate the submission of sensitive data through Bianca. Specifically, the service contains one endpoint used for
--  Authenticating the user (initially uppmax) and allowing to perform further actions
+- Authenticating the user (initially uppmax) and allowing to perform further actions
 - Creation of token and s3config file for a specified SDA user
 
 ## Endpoint Request

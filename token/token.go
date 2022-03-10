@@ -32,17 +32,17 @@ func readRequestBody(body io.ReadCloser) (tokenRequest tokenRequest, err error) 
 
 	reqBody, err := ioutil.ReadAll(body)
 	if err != nil {
-		return tokenRequest, fmt.Errorf("Reading request body")
+		return tokenRequest, fmt.Errorf("Error reading request body")
 	}
 	defer body.Close()
 
 	err = json.Unmarshal(reqBody, &tokenRequest)
 	if err != nil {
-		return tokenRequest, fmt.Errorf("Unmarshaling data")
+		return tokenRequest, fmt.Errorf("Error unmarshaling data")
 	}
 
 	if tokenRequest.ProjectID == "" || tokenRequest.Swamid == "" {
-		return tokenRequest, fmt.Errorf("Incomplete data")
+		return tokenRequest, fmt.Errorf("Incomplete incoming data")
 	}
 
 	return tokenRequest, nil
