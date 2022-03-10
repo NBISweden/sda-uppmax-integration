@@ -1,7 +1,8 @@
 global:
+  egaUser: ""
+  expirationDays: 14
   iss: ""
   pathToKey: ""
+  s3url: ""
   uppmaxUsername: ""
   uppmaxPassword: ""
-  s3url: ""
-  expirationDays: 14

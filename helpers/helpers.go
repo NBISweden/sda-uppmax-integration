@@ -28,6 +28,7 @@ type Conf struct {
 	Username       string
 	Password       string
 	S3URL          string
+	EgaUser        string
 }
 
 // NewConf read the configuration from the config.yaml file
@@ -55,10 +56,14 @@ func NewConf(conf *Conf) (err error) {
 		}
 	}
 
-	if !viper.IsSet("global.iss") || !viper.IsSet("global.pathToKey") ||
-		!viper.IsSet("global.uppmaxUsername") || !viper.IsSet("global.uppmaxPassword") ||
-		!viper.IsSet("global.s3url") {
-		return fmt.Errorf("Required fields not found in configuration")
+	requiredConfVars := []string{
+		"global.iss", "global.pathToKey", "global.uppmaxUsername", "global.uppmaxPassword", "global.s3url", "global.egaUser",
+	}
+
+	for _, s := range requiredConfVars {
+		if !viper.IsSet(s) || viper.GetString(s) == "" {
+			return fmt.Errorf("Required configuration field %s not set", s)
+		}
 	}
 
 	conf.Iss = viper.GetString("global.iss")
@@ -66,6 +71,7 @@ func NewConf(conf *Conf) (err error) {
 	conf.Username = viper.GetString("global.uppmaxUsername")
 	conf.Password = viper.GetString("global.uppmaxPassword")
 	conf.S3URL = viper.GetString("global.s3url")
+	conf.EgaUser = viper.GetString("global.egaUser")
 	if !viper.IsSet("global.expirationDays") {
 		conf.ExpirationDays = 14
 	} else {

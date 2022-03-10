@@ -114,7 +114,7 @@ func createResponse(tokenRequest tokenRequest, username string) (tokenResponse t
 // and returns the respective ega-box account
 func getEGABoxAccount(projectID string, swamID string) (username string, err error) {
 
-	username = "ega-box-8902"
+	username = helpers.Config.EgaUser
 
 	if err != nil {
 		return "", err
