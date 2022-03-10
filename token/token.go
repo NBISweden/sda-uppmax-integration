@@ -77,12 +77,7 @@ func createS3Config(username string) (s3config string, expiration string, err er
 		"check_ssl_hostname = False\n" + "encoding = UTF-8\n" + "encrypt = False\n" +
 		"socket_timeout = 30\n"
 
-	prKeyParsed, err := helpers.ParsePrivateECKey(helpers.Config.PathToKey)
-	if err != nil {
-		log.Errorf("Probably the alg which is used as argument (ec) is different from the private's key alg (rsa):\n %v", err)
-	}
-
-	token, err := createECToken(prKeyParsed, username)
+	token, err := createECToken(helpers.Config.ParsedKey, username)
 	if err != nil {
 		log.Error(err)
 	}

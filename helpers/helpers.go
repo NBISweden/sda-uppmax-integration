@@ -29,6 +29,7 @@ type Conf struct {
 	Password       string
 	S3URL          string
 	EgaUser        string
+	ParsedKey      *ecdsa.PrivateKey
 }
 
 // NewConf read the configuration from the config.yaml file
@@ -77,6 +78,10 @@ func NewConf(conf *Conf) (err error) {
 	} else {
 		conf.ExpirationDays = viper.GetInt("global.expirationDays")
 	}
+	conf.ParsedKey, err = parsePrivateECKey(conf.PathToKey)
+	if err != nil {
+		return fmt.Errorf("Could not parse ec key")
+	}
 
 	return nil
 }
@@ -123,7 +128,7 @@ func BasicAuth(next http.HandlerFunc) http.HandlerFunc {
 }
 
 // ParsePrivateECKey reads and parses the EC private key
-func ParsePrivateECKey(keyPath string) (*ecdsa.PrivateKey, error) {
+func parsePrivateECKey(keyPath string) (*ecdsa.PrivateKey, error) {
 
 	prKey, err := ioutil.ReadFile(filepath.Clean(keyPath))
 	if err != nil {
