@@ -9,6 +9,7 @@ import (
 	"testing"
 
 	"github.com/NBISweden/sda-uppmax-integration/helpers"
+	"github.com/NBISweden/sda-uppmax-integration/testHelpers"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/suite"
 )
@@ -23,7 +24,7 @@ func TestConfigTestSuite(t *testing.T) {
 }
 
 func (suite *TestSuite) SetupTest() {
-	suite.PrivateKeyPath, _ = helpers.CreateECkeys(os.TempDir())
+	suite.PrivateKeyPath, _ = testHelpers.CreateECkeys(os.TempDir())
 }
 
 func (suite *TestSuite) TestNewConf() {

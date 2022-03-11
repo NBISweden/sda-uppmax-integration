@@ -8,6 +8,8 @@ import (
 	log "github.com/sirupsen/logrus"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/suite"
+
+	"github.com/NBISweden/sda-uppmax-integration/testHelpers"
 )
 
 type TestSuite struct {
@@ -20,7 +22,7 @@ func TestConfigTestSuite(t *testing.T) {
 }
 
 func (suite *TestSuite) SetupTest() {
-	suite.PrivateKeyPath, _ = CreateECkeys(os.TempDir())
+	suite.PrivateKeyPath, _ = testHelpers.CreateECkeys(os.TempDir())
 }
 
 func (suite *TestSuite) TestCreateErrorResponse() {
