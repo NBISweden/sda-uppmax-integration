@@ -1,0 +1,68 @@
+# Default values for uppmax-integration.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+global:
+  iss: "https://login.test.ega.nbis.se"
+  pathToKey: "/vault/secrets/jwt.key"
+  uppmaxUsername: "uppmax"
+  uppmaxPassword: "uppmax"
+  s3url: "inbox.test.ega.nbis.se"
+  expirationDays: "a25"
+  egaUser: "ega-box-8902"
+  annotations:
+    "vault.hashicorp.com/agent-inject": "true"
+    "vault.hashicorp.com/role": "lega-auth"
+    "vault.hashicorp.com/agent-requests-cpu": "32m"
+    "vault.hashicorp.com/ca-cert": "/vault/tls/ca.crt"
+    "vault.hashicorp.com/tls-secret": "vault-ca"
+    "vault.hashicorp.com/agent-pre-populate": "false"
+    "vault.hashicorp.com/agent-run-as-user": "65534"
+    "vault.hashicorp.com/agent-inject-secret-ca.crt": "service-pki/cert/ca_chain"
+    "vault.hashicorp.com/agent-inject-template-ca.crt": |
+      {{- with secret "service-pki/cert/ca_chain" -}}
+      {{ .Data.certificate }}
+      {{- end -}}
+    "vault.hashicorp.com/agent-inject-secret-jwt.key": "transit/export/signing-key/jwt/1"
+    "vault.hashicorp.com/agent-inject-template-jwt.key": |
+      {{- with secret "transit/export/signing-key/jwt/1" -}}
+      {{ index .Data.keys "1" }}
+      {{- end -}}
+    
+
+replicaCount: 1
+
+image:
+  repository: dbampalikis/test-nbis
+  pullPolicy: Always
+  # Overrides the image tag whose default is the chart appVersion.
+  tag: "uppmax2"
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+serviceAccount:
+  # Specifies whether a service account should be created
+  create: false
+  # Annotations to add to the service account
+  annotations: {}
+  # The name of the service account to use.
+  # If not set and create is true, a name is generated using the fullname template
+  name: "federated-sda"
+
+service:
+  type: ClusterIP
+  port: 80
+
+resources:
+  # We usually recommend not to specify default resources and to leave this as a conscious
+  # choice for the user. This also increases chances charts run on environments with little
+  # resources, such as Minikube. If you do want to specify resources, uncomment the following
+  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+  limits:
+    cpu: 100m
+    memory: 128Mi
+  requests:
+    cpu: 100m
+    memory: 128Mi

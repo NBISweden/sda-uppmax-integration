@@ -1,0 +1,26 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ include "uppmax-integration.name" . }}-ingress
+  {{- with .Values.ingress.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  rules:
+    - host: {{ .Values.serverName }}
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ include "uppmax-integration.name" . }}
+                port:
+                  number: {{ .Values.service.port }}
+  {{ if eq .Values.protocol "https" }}
+  tls:
+  - hosts:
+    - {{ .Values.serverName }}
+    secretName: {{ include "uppmax-integration.name" . }}-ingress-tls
+  {{ end }}
