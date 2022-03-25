@@ -127,6 +127,9 @@ func GetToken(w http.ResponseWriter, r *http.Request) {
 		currentError := helpers.CreateErrorResponse("Error reading request body - " + err.Error())
 		w.WriteHeader(http.StatusInternalServerError)
 		fmt.Fprintln(w, string(currentError))
+
+		return
+
 	}
 
 	// Check specified swam_id against project_id
@@ -135,6 +138,9 @@ func GetToken(w http.ResponseWriter, r *http.Request) {
 		currentError := helpers.CreateErrorResponse("Unauthorized to access specified project")
 		w.WriteHeader(http.StatusInternalServerError)
 		fmt.Fprintln(w, string(currentError))
+
+		return
+
 	}
 
 	// Create token for user corresponding to specified swam_id
@@ -143,6 +149,8 @@ func GetToken(w http.ResponseWriter, r *http.Request) {
 		currentError := helpers.CreateErrorResponse("Unable to create token for specified project")
 		w.WriteHeader(http.StatusInternalServerError)
 		fmt.Fprintln(w, string(currentError))
+
+		return
 	}
 
 	response, _ := json.Marshal(resp)
