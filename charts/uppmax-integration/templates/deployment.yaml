@@ -23,8 +23,8 @@ spec:
         role: uppmax-integration
         release: {{ .Release.Name }}
       annotations:
-{{- if .Values.global.annotations }}
-{{- toYaml .Values.global.annotations | nindent 8 -}}
+{{- if .Values.podAnnotations }}
+{{- toYaml .Values.podAnnotations | nindent 8 -}}
 {{- end }}
     spec:
       serviceAccountName: {{ .Values.serviceAccount.name }}

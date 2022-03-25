@@ -7,6 +7,6 @@ spec:
     app: {{ include "uppmax-integration.name" . }}
   ports:
     - name: http
-      port: {{ .Values.service.port }}
+      port: {{ ternary 443 80 ( .Values.global.tls.enabled ) }}
       targetPort: 8080
       protocol: TCP

@@ -8,7 +8,7 @@ metadata:
   {{- end }}
 spec:
   rules:
-    - host: {{ .Values.serverName }}
+    - host: {{ .Values.ingress.hostName }}
       http:
         paths:
           - path: /
@@ -18,9 +18,9 @@ spec:
                 name: {{ include "uppmax-integration.name" . }}
                 port:
                   number: {{ .Values.service.port }}
-  {{ if eq .Values.protocol "https" }}
+  {{ if eq .Values.ingress.protocol "https" }}
   tls:
   - hosts:
-    - {{ .Values.serverName }}
+    - {{ .Values.ingress.hostName }}
     secretName: {{ include "uppmax-integration.name" . }}-ingress-tls
   {{ end }}
