@@ -8,10 +8,10 @@ global:
   uppmaxUsername: "uppmax"
   uppmaxPassword: "uppmax"
   s3url: "inbox.test.ega.nbis.se"
-  expirationDays: "a25"
-  egaUser: "ega-box-8902"
+  expirationDays: "25"
+  egaUser: "ega-box-uppmax"
   tls:
-    enabled: true
+    enabled: false
 
 podAnnotations:
   "vault.hashicorp.com/agent-inject": "true"
@@ -36,10 +36,10 @@ podAnnotations:
 replicaCount: 1
 
 image:
-  repository: dbampalikis/test-nbis
+  repository: harbor.nbis.se/uppmax/integration
   pullPolicy: Always
   # Overrides the image tag whose default is the chart appVersion.
-  tag: "uppmax2"
+  tag: "latest"
 
 imagePullSecrets: []
 nameOverride: ""
@@ -73,5 +73,6 @@ resources:
 ingress:
   hostName: "uppmax.test.ega.nbis.se"
   protocol: "https"
+  ingressClassName: "nginx"
   annotations:
-    kubernetes.io/ingress.class: nginx
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
