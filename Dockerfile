@@ -5,8 +5,9 @@ ENV CGO_ENABLED=0
 
 COPY . .
 
-RUN go build -o uppmax-integration
+RUN go build -buildvcs=false -o uppmax-integration
 RUN echo "nobody:x:65534:65534:nobody:/:/sbin/nologin" > passwd
+
 
 FROM scratch
 
