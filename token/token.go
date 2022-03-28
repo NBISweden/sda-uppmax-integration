@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"io"
 	"io/ioutil"
+	"log"
 	"net/http"
 	"time"
 
@@ -32,12 +33,16 @@ func readRequestBody(body io.ReadCloser) (tokenRequest tokenRequest, err error) 
 
 	reqBody, err := ioutil.ReadAll(body)
 	if err != nil {
+		log.Print("Error reading request body: ", err)
+
 		return tokenRequest, fmt.Errorf("Error reading request body")
 	}
 	defer body.Close()
 
 	err = json.Unmarshal(reqBody, &tokenRequest)
 	if err != nil {
+		log.Print("Error unmarshaling: ", err)
+
 		return tokenRequest, fmt.Errorf("Error unmarshaling data")
 	}
 
