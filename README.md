@@ -11,7 +11,7 @@ The SDA Uppmax Integration is a service used in the Sensitive Data Archive proje
 Currently one endpoint is available when running the service, described with curl:
 ```bash
 curl --location --request POST '<base_url>:8080/token' \
---header 'Authorization: Basic <username>:<password>' \
+--header 'Authorization: Basic <basic_auth_from_creds>' \
 --header 'Content-Type: text/plain' \
 --data-raw '{
     "swamid": "<swamid>",
@@ -37,7 +37,7 @@ The `token` endpoint returns the following structure, if the user is authorised 
 The `s3config` file is base64 encoded in the response described above.
 
 ## How to run
-The app can be confiugured via ENVs or via a yaml file, an example config file is located in the root of this repo.
+The app can be configured via ENVs or via a yaml file, an example config file is located in the root of this repo.
 In order to run the service locally install [golang](https://go.dev/learn/), navigate to the root of the repository and run
 ```bash
 go run .
