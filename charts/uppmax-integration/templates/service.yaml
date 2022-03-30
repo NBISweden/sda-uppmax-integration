@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "uppmax-integration.name" . }}
+spec:
+  selector:
+    app: {{ include "uppmax-integration.name" . }}
+  ports:
+    - name: http
+      port: {{ ternary 443 80 ( .Values.global.tls.enabled ) }}
+      targetPort: 8080
+      protocol: TCP

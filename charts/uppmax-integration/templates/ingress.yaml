@@ -1,0 +1,33 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ include "uppmax-integration.name" . }}-ingress
+  annotations:
+    {{- if eq "nginx" .Values.ingress.ingressClassName }}
+    nginx.ingress.kubernetes.io/rewrite-target: "/"
+    nginx.ingress.kubernetes.io/backend-protocol: "{{ ternary "HTTPS" "HTTP" .Values.global.tls.enabled }}"
+    {{- end }}
+    {{- with .Values.ingress.annotations }}
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+{{- if .Values.ingress.ingressClassName }}
+  ingressClassName: {{ .Values.ingress.ingressClassName }}
+{{- end }}
+  rules:
+    - host: {{ .Values.ingress.hostName }}
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ include "uppmax-integration.name" . }}
+                port:
+                  number: {{ ternary 443 80 ( .Values.global.tls.enabled ) }}
+  {{ if eq .Values.ingress.protocol "https" }}
+  tls:
+  - hosts:
+    - {{ .Values.ingress.hostName }}
+    secretName: {{ include "uppmax-integration.name" . }}-ingress-tls
+  {{ end }}

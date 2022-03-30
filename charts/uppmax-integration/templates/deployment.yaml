@@ -1,0 +1,55 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "uppmax-integration.name" . }}
+  labels:
+    role: uppmax-integration
+    app: {{ template "uppmax-integration.name" . }}
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    component: {{ .Release.Name }}-uppmax-integration
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  replicas: 1
+  revisionHistoryLimit: {{ default "3" .Values.global.revisionHistory }}
+  selector:
+    matchLabels:
+      app: {{ template "uppmax-integration.name" . }}
+      release: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app: {{ template "uppmax-integration.name" . }}
+        role: uppmax-integration
+        release: {{ .Release.Name }}
+      annotations:
+{{- if .Values.podAnnotations }}
+{{- toYaml .Values.podAnnotations | nindent 8 -}}
+{{- end }}
+    spec:
+      serviceAccountName: {{ .Values.serviceAccount.name }}
+      securityContext:
+        runAsUser: 65534
+        runAsGroup: 65534
+        fsGroup: 65534
+      containers:
+      - name: uppmax-integration
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+        imagePullPolicy: {{ .Values.image.imagePullPolicy | quote }}
+        env:
+        - name: GLOBAL_ISS
+          value: {{ .Values.global.iss }}
+        - name: GLOBAL_PATHTOKEY
+          value: {{ .Values.global.pathToKey }}
+        - name: GLOBAL_UPPMAXUSERNAME 
+          value: {{ .Values.global.uppmaxUsername }}
+        - name: GLOBAL_UPPMAXPASSWORD
+          value: {{ .Values.global.uppmaxPassword }}
+        - name: GLOBAL_S3URL
+          value: {{ .Values.global.s3url }}
+        - name: GLOBAL_EXPIRATIONDAYS
+          value: {{ .Values.global.expirationDays | quote }}
+        - name: GLOBAL_EGAUSER
+          value: {{ .Values.global.egaUser }}
+        securityContext:
+          allowPrivilegeEscalation: false
