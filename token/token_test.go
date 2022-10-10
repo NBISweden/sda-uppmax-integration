@@ -10,6 +10,7 @@ import (
 
 	"github.com/NBISweden/sda-uppmax-integration/helpers"
 	"github.com/NBISweden/sda-uppmax-integration/testHelpers"
+	"github.com/golang-jwt/jwt"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/suite"
 )
@@ -82,9 +83,17 @@ func (suite *TestSuite) TestCreateECToken() {
 	err = helpers.NewConf(&helpers.Config)
 	assert.NoError(suite.T(), err)
 
-	_, err = createECToken(helpers.Config.ParsedKey, "username")
-
+	tokenString, err := createECToken(helpers.Config.ParsedKey, helpers.Config.EgaUser)
 	assert.NoError(suite.T(), err)
+
+	// Parse token to make sure it contains the correct information
+	token, _ := jwt.Parse(tokenString, func(tokenElixir *jwt.Token) (interface{}, error) { return nil, nil })
+	claims, _ := token.Claims.(jwt.MapClaims)
+
+	// Check that token includes the correct information
+	assert.Equal(suite.T(), helpers.Config.Username, claims["pilot"])
+	assert.Equal(suite.T(), helpers.Config.Iss, claims["iss"])
+	assert.Equal(suite.T(), helpers.Config.EgaUser, claims["sub"])
 
 	s3config, _, err := createS3Config("someuser")
 

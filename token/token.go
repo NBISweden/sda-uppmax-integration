@@ -61,9 +61,9 @@ func createECToken(key *ecdsa.PrivateKey, username string) (string, error) {
 	// token claims
 	claims := make(jwt.MapClaims)
 	claims["iss"] = helpers.Config.Iss
-
 	claims["exp"] = time.Now().AddDate(0, 0, helpers.Config.ExpirationDays).Unix()
 	claims["sub"] = username
+	claims["pilot"] = helpers.Config.Username
 	token.Claims = claims
 
 	// create token
