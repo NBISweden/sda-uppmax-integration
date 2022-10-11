@@ -8,9 +8,12 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
+	"os"
 	"path"
 	"path/filepath"
 	"strings"
+
+	b64 "encoding/base64"
 
 	log "github.com/sirupsen/logrus"
 
@@ -23,17 +26,19 @@ var Config Conf
 
 // Conf describes the configuration of the service
 type Conf struct {
-	PathToKey      string
-	Iss            string
-	ExpirationDays int
-	Username       string
-	Password       string
-	S3URL          string
-	EgaUser        string
-	ParsedKey      *ecdsa.PrivateKey
+	PathToKey       string
+	Iss             string
+	ExpirationDays  int
+	Username        string
+	Password        string
+	S3URL           string
+	EgaUser         string
+	ParsedKey       *ecdsa.PrivateKey
+	Crypt4ghKeyPath string
+	Crypt4ghKey     string
 }
 
-// NewConf read the configuration from the config.yaml file
+// NewConf reads the configuration from the config.yaml file
 func NewConf(conf *Conf) (err error) {
 	viper.SetConfigName("config")
 	viper.AddConfigPath(".")
@@ -74,6 +79,8 @@ func NewConf(conf *Conf) (err error) {
 	conf.Password = viper.GetString("global.uppmaxPassword")
 	conf.S3URL = viper.GetString("global.s3url")
 	conf.EgaUser = viper.GetString("global.egaUser")
+	conf.Crypt4ghKeyPath = viper.GetString("global.crypt4ghKeyPath")
+
 	if !viper.IsSet("global.expirationDays") {
 		conf.ExpirationDays = 14
 	} else {
@@ -83,6 +90,12 @@ func NewConf(conf *Conf) (err error) {
 	if err != nil {
 		return fmt.Errorf("Could not parse ec key")
 	}
+	// Parse crypt4gh key and store it as base64 encoded
+	keyBytes, err := os.ReadFile(conf.Crypt4ghKeyPath)
+	if err != nil {
+		return fmt.Errorf("Could not parse crypt4gh public key")
+	}
+	conf.Crypt4ghKey = b64.StdEncoding.EncodeToString([]byte(keyBytes))
 
 	return nil
 }

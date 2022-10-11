@@ -14,7 +14,9 @@ import (
 
 type TestSuite struct {
 	suite.Suite
-	PrivateKeyPath string
+	PrivateKeyPath  string
+	Crypt4ghKeyPath string
+	TempDir         string
 }
 
 func TestConfigTestSuite(t *testing.T) {
@@ -22,7 +24,19 @@ func TestConfigTestSuite(t *testing.T) {
 }
 
 func (suite *TestSuite) SetupTest() {
-	suite.PrivateKeyPath, _ = testHelpers.CreateECkeys(os.TempDir())
+	suite.TempDir, _ = ioutil.TempDir(os.TempDir(), "keys-")
+	suite.PrivateKeyPath, _ = testHelpers.CreateECkeys(suite.TempDir)
+
+	// Create random public crypt4gh key
+	cryptKey := "-----BEGIN CRYPT4GH PUBLIC KEY-----\nvSome+asd/apublicKey\n-----END CRYPT4GH PUBLIC KEY-----"
+	crypt4ghFile, _ := ioutil.TempFile(suite.TempDir, "rsakey-")
+	_, err := crypt4ghFile.Write([]byte(cryptKey))
+	if err != nil {
+		log.Fatal(err)
+	}
+	suite.Crypt4ghKeyPath = crypt4ghFile.Name()
+
+	_ = ioutil.WriteFile(suite.Crypt4ghKeyPath, []byte(cryptKey), 0600)
 }
 
 func (suite *TestSuite) TestCreateErrorResponse() {
@@ -42,6 +56,8 @@ func (suite *TestSuite) TestNewConf() {
   s3url: "some.s3.url"
   expirationDays: 14
   egaUser: "some-user"
+  crypt4ghKeyPath: "` + suite.Crypt4ghKeyPath + `"
+
 `
 	configName := "config.yaml"
 	err := ioutil.WriteFile(configName, []byte(confData), 0600)
@@ -63,6 +79,7 @@ func (suite *TestSuite) TestNewConfMissingValue() {
   s3url: "some.s3.url"
   expirationDays: 14
   egaUser: "some-user"
+  crypt4ghKeyPath: "` + suite.Crypt4ghKeyPath + `"
 `
 
 	configName := "config.yaml"
@@ -86,6 +103,7 @@ func (suite *TestSuite) TestNewConfMissingKey() {
   s3url: "some.s3.url"
   expirationDays: 14
   egaUser: "some-user"
+  crypt4ghKeyPath: "` + suite.Crypt4ghKeyPath + `"
 `
 	configName := "config.yaml"
 	err := ioutil.WriteFile(configName, []byte(confData), 0600)

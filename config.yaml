@@ -1,4 +1,5 @@
 global:
+  crypt4ghKeyPath: ""
   egaUser: ""
   expirationDays: 14
   iss: ""

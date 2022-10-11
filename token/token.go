@@ -27,6 +27,7 @@ type tokenResponse struct {
 	RequestTime string `json:"request_time"`
 	Expiration  string `json:"expiration"`
 	S3Config    string `json:"s3config"`
+	Crypt4ghKey string `json:"crypt4gh_key"`
 }
 
 func readRequestBody(body io.ReadCloser) (tokenRequest tokenRequest, err error) {
@@ -95,11 +96,14 @@ func createS3Config(username string) (s3config string, expiration string, err er
 	return s3config, expiration, nil
 }
 
+// createResponse is populating the struct that contains the response to the request by
+// adding values to the fields and creating an S3 configuration file
 func createResponse(tokenRequest tokenRequest, username string) (tokenResponse tokenResponse, err error) {
 
 	tokenResponse.RequestTime = time.Now().Format("01-02-2006 15:04:05")
 	tokenResponse.Swamid = tokenRequest.Swamid
 	tokenResponse.ProjectID = tokenRequest.ProjectID
+	tokenResponse.Crypt4ghKey = helpers.Config.Crypt4ghKey
 
 	tokenResponse.S3Config, tokenResponse.Expiration, err = createS3Config(username)
 	if err != nil {
