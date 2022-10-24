@@ -82,13 +82,13 @@ func (suite *TestSuite) TestCreateECToken() {
 
 	confData := `global:
   iss: "https://some.url"
-  pathToKey: "` + suite.PrivateKeyPath + `"
+  jwtKey: "` + suite.PrivateKeyPath + `"
   uppmaxUsername: "user"
   uppmaxPassword: "password"
   s3url: "some.s3.url"
   expirationDays: 14
   egaUser: "some-user"
-  crypt4ghKeyPath: "` + suite.Crypt4ghKeyPath + `"
+  crypt4ghKey: "` + suite.Crypt4ghKeyPath + `"
 `
 	configName := "config.yaml"
 	err := ioutil.WriteFile(configName, []byte(confData), 0600)
@@ -99,7 +99,7 @@ func (suite *TestSuite) TestCreateECToken() {
 	err = helpers.NewConf(&helpers.Config)
 	assert.NoError(suite.T(), err)
 
-	tokenString, err := createECToken(helpers.Config.ParsedKey, helpers.Config.EgaUser)
+	tokenString, err := createECToken(helpers.Config.JwtParsedKey, helpers.Config.EgaUser)
 	assert.NoError(suite.T(), err)
 
 	// Parse token to make sure it contains the correct information
@@ -131,13 +131,13 @@ func (suite *TestSuite) TestCreateResponse() {
 
 	confData := `global:
   iss: "https://some.url"
-  pathToKey: "` + suite.PrivateKeyPath + `"
+  jwtKey: "` + suite.PrivateKeyPath + `"
   uppmaxUsername: "user"
   uppmaxPassword: "password"
   s3url: "some.s3.url"
   expirationDays: 14
   egaUser: "some-user"
-  crypt4ghKeyPath: "` + suite.Crypt4ghKeyPath + `"
+  crypt4ghKey: "` + suite.Crypt4ghKeyPath + `"
 `
 	configName := "config.yaml"
 	err := ioutil.WriteFile(configName, []byte(confData), 0600)

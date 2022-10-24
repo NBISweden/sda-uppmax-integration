@@ -26,16 +26,16 @@ var Config Conf
 
 // Conf describes the configuration of the service
 type Conf struct {
-	PathToKey       string
-	Iss             string
-	ExpirationDays  int
-	Username        string
-	Password        string
-	S3URL           string
-	EgaUser         string
-	ParsedKey       *ecdsa.PrivateKey
 	Crypt4ghKeyPath string
 	Crypt4ghKey     string
+	EgaUser         string
+	ExpirationDays  int
+	Iss             string
+	JwtKeyPath      string
+	JwtParsedKey    *ecdsa.PrivateKey
+	S3URL           string
+	Username        string
+	Password        string
 }
 
 // NewConf reads the configuration from the config.yaml file
@@ -64,7 +64,7 @@ func NewConf(conf *Conf) (err error) {
 	}
 
 	requiredConfVars := []string{
-		"global.iss", "global.pathToKey", "global.uppmaxUsername", "global.uppmaxPassword", "global.s3url", "global.egaUser",
+		"global.iss", "global.crypt4ghKey", "global.uppmaxUsername", "global.uppmaxPassword", "global.s3url", "global.egaUser", "global.jwtKey",
 	}
 
 	for _, s := range requiredConfVars {
@@ -74,19 +74,19 @@ func NewConf(conf *Conf) (err error) {
 	}
 
 	conf.Iss = viper.GetString("global.iss")
-	conf.PathToKey = viper.GetString("global.pathToKey")
+	conf.JwtKeyPath = viper.GetString("global.jwtKey")
 	conf.Username = viper.GetString("global.uppmaxUsername")
 	conf.Password = viper.GetString("global.uppmaxPassword")
 	conf.S3URL = viper.GetString("global.s3url")
 	conf.EgaUser = viper.GetString("global.egaUser")
-	conf.Crypt4ghKeyPath = viper.GetString("global.crypt4ghKeyPath")
+	conf.Crypt4ghKeyPath = viper.GetString("global.crypt4ghKey")
 
 	if !viper.IsSet("global.expirationDays") {
 		conf.ExpirationDays = 14
 	} else {
 		conf.ExpirationDays = viper.GetInt("global.expirationDays")
 	}
-	conf.ParsedKey, err = parsePrivateECKey(conf.PathToKey)
+	conf.JwtParsedKey, err = parsePrivateECKey(conf.JwtKeyPath)
 	if err != nil {
 		return fmt.Errorf("Could not parse ec key")
 	}

@@ -50,13 +50,13 @@ func (suite *TestSuite) TestCreateErrorResponse() {
 func (suite *TestSuite) TestNewConf() {
 	confData := `global:
   iss: "https://some.url"
-  pathToKey: "` + suite.PrivateKeyPath + `"
+  jwtKey: "` + suite.PrivateKeyPath + `"
   uppmaxUsername: "user"
   uppmaxPassword: "password"
   s3url: "some.s3.url"
   expirationDays: 14
   egaUser: "some-user"
-  crypt4ghKeyPath: "` + suite.Crypt4ghKeyPath + `"
+  crypt4ghKey: "` + suite.Crypt4ghKeyPath + `"
 
 `
 	configName := "config.yaml"
@@ -73,13 +73,13 @@ func (suite *TestSuite) TestNewConf() {
 
 func (suite *TestSuite) TestNewConfMissingValue() {
 	confData := `global:
-  pathToKey: "` + suite.PrivateKeyPath + `"
+  jwtKey: "` + suite.PrivateKeyPath + `"
   uppmaxUsername: "user"
   uppmaxPassword: "password"
   s3url: "some.s3.url"
   expirationDays: 14
   egaUser: "some-user"
-  crypt4ghKeyPath: "` + suite.Crypt4ghKeyPath + `"
+  crypt4ghKey: "` + suite.Crypt4ghKeyPath + `"
 `
 
 	configName := "config.yaml"
@@ -97,13 +97,13 @@ func (suite *TestSuite) TestNewConfMissingValue() {
 func (suite *TestSuite) TestNewConfMissingKey() {
 	confData := `global:
   iss: "https://some.url"
-  pathToKey: "some/path"
+  jwtKey: "some/path"
   uppmaxUsername: "user"
   uppmaxPassword: "password"
   s3url: "some.s3.url"
   expirationDays: 14
   egaUser: "some-user"
-  crypt4ghKeyPath: "` + suite.Crypt4ghKeyPath + `"
+  crypt4ghKey: "` + suite.Crypt4ghKeyPath + `"
 `
 	configName := "config.yaml"
 	err := ioutil.WriteFile(configName, []byte(confData), 0600)
