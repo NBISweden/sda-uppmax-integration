@@ -1,9 +1,9 @@
 global:
-  crypt4ghKeyPath: ""
+  crypt4ghKey: ""
   egaUser: ""
   expirationDays: 14
   iss: ""
-  pathToKey: ""
+  jwtKey: ""
   s3url: ""
   uppmaxUsername: ""
   uppmaxPassword: ""

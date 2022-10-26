@@ -82,7 +82,7 @@ func createS3Config(username string) (s3config string, expiration string, err er
 		"check_ssl_hostname = True\n" + "encoding = UTF-8\n" + "encrypt = False\n" +
 		"socket_timeout = 30\n"
 
-	token, err := createECToken(helpers.Config.ParsedKey, username)
+	token, err := createECToken(helpers.Config.JwtParsedKey, username)
 	if err != nil {
 		return "", "", err
 	}

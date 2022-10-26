@@ -37,19 +37,48 @@ spec:
         image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
         imagePullPolicy: {{ .Values.image.imagePullPolicy | quote }}
         env:
-        - name: GLOBAL_ISS
-          value: {{ .Values.global.iss }}
-        - name: GLOBAL_PATHTOKEY
-          value: {{ .Values.global.pathToKey }}
-        - name: GLOBAL_UPPMAXUSERNAME 
-          value: {{ .Values.global.uppmaxUsername }}
-        - name: GLOBAL_UPPMAXPASSWORD
-          value: {{ .Values.global.uppmaxPassword }}
-        - name: GLOBAL_S3URL
-          value: {{ .Values.global.s3url }}
+        - name: GLOBAL_CRYPT4GHKEY
+          value: /secrets/{{ .Values.global.crypt4ghKey }}
+        - name: GLOBAL_EGAUSER
+          valueFrom: 
+            secretKeyRef:
+              name: {{ include "uppmax-integration.name" . }}-secret
+              key: egaUser
         - name: GLOBAL_EXPIRATIONDAYS
           value: {{ .Values.global.expirationDays | quote }}
-        - name: GLOBAL_EGAUSER
-          value: {{ .Values.global.egaUser }}
+        - name: GLOBAL_ISS
+          value: {{ .Values.global.iss }}
+        - name: GLOBAL_JWTKEY
+          value: /secrets/{{ .Values.global.jwt.keyName }}
+        - name: GLOBAL_S3URL
+          value: {{ .Values.global.s3url }}
+        - name: GLOBAL_UPPMAXUSERNAME 
+          valueFrom: 
+            secretKeyRef:
+              name: {{ include "uppmax-integration.name" . }}-secret
+              key: uppmaxUsername
+        - name: GLOBAL_UPPMAXPASSWORD
+          valueFrom: 
+            secretKeyRef:
+              name: {{ include "uppmax-integration.name" . }}-secret
+              key: uppmaxPassword
         securityContext:
           allowPrivilegeEscalation: false
+        volumeMounts:
+        - name: keys
+          mountPath: /secrets/
+      volumes:
+        - name: keys
+          projected:
+            defaultMode: 0440
+            sources:
+            - secret:
+                name: {{ required "A secret for the JWT signing key is needed" .Values.global.jwt.secretName }}
+                items:
+                  - key: {{ required "The name of the JWT signing key is needed" .Values.global.jwt.keyName }}
+                    path: {{ .Values.global.jwt.keyName }}
+            - secret:
+                name: {{ required "A secret for the crypt4gh public key is needed" .Values.global.jwt.secretName }}
+                items:
+                  - key: {{ .Values.global.crypt4ghKey }}
+                    path: {{ .Values.global.crypt4ghKey }}

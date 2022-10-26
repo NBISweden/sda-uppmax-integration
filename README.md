@@ -45,9 +45,25 @@ go run .
 The following configuration is required to run the service
 | Variable     | Description  | Example |
 | ------------ | :----------: | ------: |
+| crypt4ghKey | Path to public key | `../sda_crypt4gh.pub` |
+| expirationDays | Token validity duration in days | 14 |
 | iss | JWT issuer | `https://issuer.example.com` |
-| pathToKey | Path to private key | `../my_key.pem` |
+| jwtKey | Path to private key | `../my_key.pub` |
+| s3url | The URL to the s3Inbox | `s3.example.com` |
 | uppmaxUsername | Username for token requester | `some_username` |
 | uppmaxPassword | Password for token requester | `some_password` |
-| s3url | The URL to the s3Inbox | `s3.example.com` |
-| expirationDays | Token validity duration in days | 14 |
+
+## How to deploy
+To deploy the service without using vault (e.g. using minikube) in the `lega` namespace, build and push the image using
+```sh
+docker build -t harbor.nbis.se/uppmax/integration .
+docker push harbor.nbis.se/uppmax/integration
+```
+Create a secret using
+```sh
+kubectl -n lega create secret generic <secret_name> --from-file=<key_path> --from-file=<public_key_path>
+```
+The names of the files should be added in the values files in `jwt.keyName` and `crypt4ghKey` respectively in the `values.yaml`. Populate the rest of the `values.yaml` file with the correct values and then install using the local copy of the helm charts with
+```sh
+helm install --namespace lega uppmax charts/uppmax-integration
+```
