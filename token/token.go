@@ -8,6 +8,7 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+	"strings"
 	"time"
 
 	b64 "encoding/base64"
@@ -88,8 +89,8 @@ func createS3Config(username string) (s3config string, expiration string, err er
 	}
 
 	expiration = time.Now().AddDate(0, 0, helpers.Config.ExpirationDays).Format("01-02-2006 15:04:05")
-	s3config += "secret_key = " + username + "\naccess_key = " + username + "\naccess_token = " + token +
-		"\nhost_base = " + helpers.Config.S3URL + "\nhost_bucket = " + helpers.Config.S3URL
+	s3config += "secret_key = " + strings.ReplaceAll(username, "@", "_") + "\naccess_key = " + strings.ReplaceAll(username, "@", "_") +
+		"\naccess_token = " + token + "\nhost_base = " + helpers.Config.S3URL + "\nhost_bucket = " + helpers.Config.S3URL
 
 	s3config = b64.StdEncoding.EncodeToString([]byte(s3config))
 
