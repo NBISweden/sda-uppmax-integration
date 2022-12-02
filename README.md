@@ -32,6 +32,7 @@ The `token` endpoint returns the following structure, if the user is authorised 
     "request_time": "<request_time>",
     "expiration": "<expiration>",
     "s3config": "<base64_encoded_s3config>"
+    "crypt4gh_key": "<base64_encoded_crypt4gh_pub_key>"
 }
 ```
 The `s3config` file is base64 encoded in the response described above.
@@ -65,5 +66,11 @@ kubectl -n lega create secret generic <secret_name> --from-file=<key_path> --fro
 ```
 The names of the files should be added in the values files in `jwt.keyName` and `crypt4ghKey` respectively in the `values.yaml`. Populate the rest of the `values.yaml` file with the correct values and then install using the local copy of the helm charts with
 ```sh
-helm install --namespace lega uppmax charts/uppmax-integration
+helm install --namespace <namespace_name> uppmax charts/uppmax-integration
+```
+while to install using the published charts use
+```sh
+helm repo add uppmax https://nbisweden.github.io/sda-uppmax-integration/
+helm repo update
+helm install --namespace <namespace_name> uppmax charts/uppmax-integration
 ```
