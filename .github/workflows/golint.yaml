@@ -6,7 +6,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        go-version: [1.16,1.17]
+        go-version: [1.19]
     steps:
 
       - name: Check out code into the Go module directory
@@ -18,7 +18,6 @@ jobs:
           go-version: ${{ matrix.go-version }}
 
       - name: Run golangci-lint
-        uses: golangci/golangci-lint-action@v3.3.1
+        uses: golangci/golangci-lint-action@v3.4.0
         with:
-          version: v1.44
           args: -E bodyclose,gocritic,gofmt,gosec,govet,nestif,nlreturn,revive,rowserrcheck --exclude G401,G501,G107,G307

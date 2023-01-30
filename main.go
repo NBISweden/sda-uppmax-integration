@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"net/http"
+	"time"
 
 	"github.com/NBISweden/sda-uppmax-integration/helpers"
 	"github.com/NBISweden/sda-uppmax-integration/token"
@@ -23,7 +24,15 @@ func main() {
 	http.HandleFunc("/token", helpers.BasicAuth(token.GetToken))
 	http.HandleFunc("/ping", ping)
 
+	server := &http.Server{
+		Addr:              ":8000",
+		ReadTimeout:       30 * time.Second,
+		WriteTimeout:      30 * time.Second,
+		IdleTimeout:       30 * time.Second,
+		ReadHeaderTimeout: 30 * time.Second,
+	}
+
 	fmt.Println("Starting server at port 8080")
-	log.Fatal(http.ListenAndServe(":8080", nil))
+	log.Fatal(server.ListenAndServe())
 
 }

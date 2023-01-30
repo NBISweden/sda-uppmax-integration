@@ -6,7 +6,6 @@ import (
 	"crypto/subtle"
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
 	"net/http"
 	"os"
 	"path"
@@ -144,7 +143,7 @@ func BasicAuth(next http.HandlerFunc) http.HandlerFunc {
 // ParsePrivateECKey reads and parses the EC private key
 func parsePrivateECKey(keyPath string) (*ecdsa.PrivateKey, error) {
 
-	prKey, err := ioutil.ReadFile(filepath.Clean(keyPath))
+	prKey, err := os.ReadFile(filepath.Clean(keyPath))
 	if err != nil {
 		return nil, err
 	}
