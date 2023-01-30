@@ -1,7 +1,6 @@
 package helpers
 
 import (
-	"io/ioutil"
 	"os"
 	"testing"
 
@@ -24,19 +23,19 @@ func TestConfigTestSuite(t *testing.T) {
 }
 
 func (suite *TestSuite) SetupTest() {
-	suite.TempDir, _ = ioutil.TempDir(os.TempDir(), "keys-")
+	suite.TempDir, _ = os.MkdirTemp(os.TempDir(), "keys-")
 	suite.PrivateKeyPath, _ = testHelpers.CreateECkeys(suite.TempDir)
 
 	// Create random public crypt4gh key
 	cryptKey := "-----BEGIN CRYPT4GH PUBLIC KEY-----\nvSome+asd/apublicKey\n-----END CRYPT4GH PUBLIC KEY-----"
-	crypt4ghFile, _ := ioutil.TempFile(suite.TempDir, "rsakey-")
+	crypt4ghFile, _ := os.CreateTemp(suite.TempDir, "rsakey-")
 	_, err := crypt4ghFile.Write([]byte(cryptKey))
 	if err != nil {
 		log.Fatal(err)
 	}
 	suite.Crypt4ghKeyPath = crypt4ghFile.Name()
 
-	_ = ioutil.WriteFile(suite.Crypt4ghKeyPath, []byte(cryptKey), 0600)
+	_ = os.WriteFile(suite.Crypt4ghKeyPath, []byte(cryptKey), 0600)
 }
 
 func (suite *TestSuite) TestCreateErrorResponse() {
@@ -60,7 +59,7 @@ func (suite *TestSuite) TestNewConf() {
 
 `
 	configName := "config.yaml"
-	err := ioutil.WriteFile(configName, []byte(confData), 0600)
+	err := os.WriteFile(configName, []byte(confData), 0600)
 	if err != nil {
 		log.Printf("failed to write temp config file, %v", err)
 	}
@@ -83,7 +82,7 @@ func (suite *TestSuite) TestNewConfMissingValue() {
 `
 
 	configName := "config.yaml"
-	err := ioutil.WriteFile(configName, []byte(confData), 0600)
+	err := os.WriteFile(configName, []byte(confData), 0600)
 	if err != nil {
 		log.Printf("failed to write temp config file, %v", err)
 	}
@@ -106,7 +105,7 @@ func (suite *TestSuite) TestNewConfMissingKey() {
   crypt4ghKey: "` + suite.Crypt4ghKeyPath + `"
 `
 	configName := "config.yaml"
-	err := ioutil.WriteFile(configName, []byte(confData), 0600)
+	err := os.WriteFile(configName, []byte(confData), 0600)
 	if err != nil {
 		log.Printf("failed to write temp config file, %v", err)
 	}

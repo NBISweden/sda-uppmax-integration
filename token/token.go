@@ -5,7 +5,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
-	"io/ioutil"
 	"log"
 	"net/http"
 	"strings"
@@ -33,7 +32,7 @@ type tokenResponse struct {
 
 func readRequestBody(body io.ReadCloser) (tokenRequest tokenRequest, err error) {
 
-	reqBody, err := ioutil.ReadAll(body)
+	reqBody, err := io.ReadAll(body)
 	if err != nil {
 		log.Print("Error reading request body: ", err)
 
