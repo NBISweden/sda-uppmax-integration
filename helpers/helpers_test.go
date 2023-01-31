@@ -88,7 +88,7 @@ func (suite *TestSuite) TestNewConfMissingValue() {
 	}
 
 	err = NewConf(&Config)
-	assert.EqualError(suite.T(), err, "Required configuration field global.iss not set")
+	assert.EqualError(suite.T(), err, "required configuration field global.iss not set")
 
 	defer os.Remove(configName)
 }
@@ -111,7 +111,7 @@ func (suite *TestSuite) TestNewConfMissingKey() {
 	}
 
 	err = NewConf(&Config)
-	assert.EqualError(suite.T(), err, "Could not parse ec key")
+	assert.EqualError(suite.T(), err, "could not parse ec key: open some/path: no such file or directory")
 
 	defer os.Remove(configName)
 }
