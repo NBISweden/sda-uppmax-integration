@@ -18,8 +18,18 @@ curl --location --request POST '<base_url>:8080/token' \
     "projectid": "<projectid>"
 }'
 ```
+where `<basic_auth_from_creds>` is the base64 encoded string `username:password`.
 
 The `token` endpoint requires basic auth and the allowed credentials can be defined in the configuration file `config.yaml`.
+
+ex.
+```bash
+$ curl --location --request POST 'localhost:8080/token' \
+       --header "Authorization: Basic $(printf 'uppmax:uppmax' | base64)" \
+       --header 'Content-Type: text/plain' \
+       --data-raw '{"swamid": "test@sda.dev", "projectid": "sda001"}'
+```
+can be used in the docker compose development environment.
 
 ## Endpoint Response
 
