@@ -1,0 +1,37 @@
+services:
+  keymaker:
+    image: golang:alpine3.16
+    volumes:
+      - keys:/keys
+    command:
+      - "/bin/sh"
+      - "-c"
+      - if [ ! -f "/keys/c4gh.sec.pem" ]; then git --help >/dev/null 2>&1; [[ "$$?" != "0" ]] && apk add git;
+        [ ! -d "crypt4gh" ] && git clone https://github.com/neicnordic/crypt4gh.git;
+        cd crypt4gh;
+        [ ! -f "crypt4gh" ] && go build .;
+        ./crypt4gh generate -n c4gh -p 'pass' && mv *.pem /keys/; fi;
+        [ ! -f /keys/jwt.key ] && apk add openssl && openssl ecparam -name prime256v1 -genkey -noout -out /keys/jwt.key && chmod 644 /keys/jwt.key || true
+  uppmax-integration:
+    build:
+      context: .
+    depends_on:
+      keymaker:
+        condition: service_completed_successfully
+    environment:
+      - LOG_LEVEL=debug
+      - GLOBAL_CRYPT4GHKEY=/keys/c4gh.sec.pem
+      - GLOBAL_EGAUSER=test@sda.dev
+      - GLOBAL_EXPIRATIONDAYS=14
+      - GLOBAL_ISS=https://login.sda.dev
+      - GLOBAL_JWTKEY=/keys/jwt.key
+      - GLOBAL_S3URL=inbox.sda.dev
+      - GLOBAL_UPPMAXUSERNAME=uppmax
+      - GLOBAL_UPPMAXPASSWORD=uppmax
+    volumes:
+      - keys:/keys
+    ports:
+      - 8080:8080
+
+volumes:
+  keys:
