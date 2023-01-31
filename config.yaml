@@ -7,3 +7,7 @@ global:
   s3url: ""
   uppmaxUsername: ""
   uppmaxPassword: ""
+
+log:
+  format: text
+  level: debug

@@ -72,6 +72,24 @@ func NewConf(conf *Conf) (err error) {
 		}
 	}
 
+	if viper.IsSet("log.format") {
+		if viper.GetString("log.format") == "json" {
+			log.SetFormatter(&log.JSONFormatter{})
+			log.Info("The logs format is set to JSON")
+		}
+	}
+
+	if viper.IsSet("log.level") {
+		stringLevel := viper.GetString("log.level")
+		intLevel, err := log.ParseLevel(stringLevel)
+		if err != nil {
+			log.Printf("Log level '%s' not supported, setting to 'trace'", stringLevel)
+			intLevel = log.TraceLevel
+		}
+		log.SetLevel(intLevel)
+		log.Printf("Setting log level to '%s'", stringLevel)
+	}
+
 	conf.Iss = viper.GetString("global.iss")
 	conf.JwtKeyPath = viper.GetString("global.jwtKey")
 	conf.Username = viper.GetString("global.uppmaxUsername")
