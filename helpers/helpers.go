@@ -68,7 +68,7 @@ func NewConf(conf *Conf) (err error) {
 
 	for _, s := range requiredConfVars {
 		if !viper.IsSet(s) || viper.GetString(s) == "" {
-			return fmt.Errorf("Required configuration field %s not set", s)
+			return fmt.Errorf("required configuration field %s not set", s)
 		}
 	}
 
@@ -87,12 +87,12 @@ func NewConf(conf *Conf) (err error) {
 	}
 	conf.JwtParsedKey, err = parsePrivateECKey(conf.JwtKeyPath)
 	if err != nil {
-		return fmt.Errorf("Could not parse ec key")
+		return fmt.Errorf("could not parse ec key: %v", err)
 	}
 	// Parse crypt4gh key and store it as base64 encoded
 	keyBytes, err := os.ReadFile(conf.Crypt4ghKeyPath)
 	if err != nil {
-		return fmt.Errorf("Could not parse crypt4gh public key")
+		return fmt.Errorf("could not parse crypt4gh public key: %v", err)
 	}
 	conf.Crypt4ghKey = b64.StdEncoding.EncodeToString([]byte(keyBytes))
 
