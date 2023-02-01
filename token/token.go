@@ -36,7 +36,7 @@ func readRequestBody(body io.ReadCloser) (tokenRequest tokenRequest, err error) 
 	if err != nil {
 		log.Print("Error reading request body: ", err)
 
-		return tokenRequest, fmt.Errorf("Error reading request body")
+		return tokenRequest, fmt.Errorf("error reading request body")
 	}
 	defer body.Close()
 
@@ -44,11 +44,11 @@ func readRequestBody(body io.ReadCloser) (tokenRequest tokenRequest, err error) 
 	if err != nil {
 		log.Print("Error unmarshaling: ", err)
 
-		return tokenRequest, fmt.Errorf("Error unmarshaling data")
+		return tokenRequest, fmt.Errorf("error unmarshaling data")
 	}
 
 	if tokenRequest.ProjectID == "" || tokenRequest.Swamid == "" {
-		return tokenRequest, fmt.Errorf("Incomplete incoming data")
+		return tokenRequest, fmt.Errorf("incomplete incoming data")
 	}
 
 	return tokenRequest, nil
@@ -107,7 +107,7 @@ func createResponse(tokenRequest tokenRequest, username string) (tokenResponse t
 
 	tokenResponse.S3Config, tokenResponse.Expiration, err = createS3Config(username)
 	if err != nil {
-		return tokenResponse, fmt.Errorf("Error creating S3 configuration")
+		return tokenResponse, fmt.Errorf("error creating S3 configuration")
 	}
 
 	return tokenResponse, err

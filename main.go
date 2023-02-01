@@ -21,18 +21,20 @@ func main() {
 		log.Fatal(err)
 	}
 
+	servicePort := 8080
+
 	http.HandleFunc("/token", helpers.BasicAuth(token.GetToken))
 	http.HandleFunc("/ping", ping)
 
 	server := &http.Server{
-		Addr:              ":8000",
+		Addr:              fmt.Sprintf(":%v", servicePort),
 		ReadTimeout:       30 * time.Second,
 		WriteTimeout:      30 * time.Second,
 		IdleTimeout:       30 * time.Second,
 		ReadHeaderTimeout: 30 * time.Second,
 	}
 
-	fmt.Println("Starting server at port 8080")
+	log.Infof("Starting server at port %v", servicePort)
 	log.Fatal(server.ListenAndServe())
 
 }

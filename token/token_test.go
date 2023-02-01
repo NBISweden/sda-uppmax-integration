@@ -66,7 +66,7 @@ func (suite *TestSuite) TestNewConf() {
 
 	_, err = readRequestBody(r)
 
-	assert.EqualError(suite.T(), err, "Error unmarshaling data")
+	assert.EqualError(suite.T(), err, "error unmarshaling data")
 
 	r = io.NopCloser(strings.NewReader(`{
 		"swami": "<swamid>",
@@ -75,7 +75,7 @@ func (suite *TestSuite) TestNewConf() {
 
 	_, err = readRequestBody(r)
 
-	assert.EqualError(suite.T(), err, "Incomplete incoming data")
+	assert.EqualError(suite.T(), err, "incomplete incoming data")
 }
 
 func (suite *TestSuite) TestCreateECToken() {
