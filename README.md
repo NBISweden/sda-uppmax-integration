@@ -26,7 +26,7 @@ ex.
 ```bash
 $ curl --location --request POST 'localhost:8080/token' \
        --header "Authorization: Basic $(printf 'uppmax:uppmax' | base64)" \
-       --header 'Content-Type: text/plain' \
+       --header 'Content-Type: application/json' \
        --data-raw '{"swamid": "test@sda.dev", "projectid": "sda001"}'
 ```
 can be used in the docker compose development environment.
