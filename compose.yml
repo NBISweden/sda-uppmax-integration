@@ -21,7 +21,9 @@ services:
     environment:
       - LOG_LEVEL=debug
       - GLOBAL_CRYPT4GHKEY=/keys/c4gh.sec.pem
-      - GLOBAL_EGAUSER=test@sda.dev
+      - GLOBAL_EGAUSER=sda
+      - GLOBAL_EGAPASSWORD=pass
+      - GLOBAL_EGAURL=http://ega.dev
       - GLOBAL_EXPIRATIONDAYS=14
       - GLOBAL_ISS=https://login.sda.dev
       - GLOBAL_JWTKEY=/keys/jwt.key

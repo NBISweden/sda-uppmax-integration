@@ -1,6 +1,8 @@
 global:
   crypt4ghKey: ""
   egaUser: ""
+  egaPassword: ""
+  egaUrl: ""
   expirationDays: 14
   iss: ""
   jwtKey: ""

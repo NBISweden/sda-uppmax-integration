@@ -28,6 +28,8 @@ type Conf struct {
 	Crypt4ghKeyPath string
 	Crypt4ghKey     string
 	EgaUser         string
+	EgaPassword     string
+	EgaUrl          string
 	ExpirationDays  int
 	Iss             string
 	JwtKeyPath      string
@@ -96,6 +98,8 @@ func NewConf(conf *Conf) (err error) {
 	conf.Password = viper.GetString("global.uppmaxPassword")
 	conf.S3URL = viper.GetString("global.s3url")
 	conf.EgaUser = viper.GetString("global.egaUser")
+	conf.EgaPassword = viper.GetString("global.egaPassword")
+	conf.EgaUrl = viper.GetString("global.egaUrl")
 	conf.Crypt4ghKeyPath = viper.GetString("global.crypt4ghKey")
 
 	if !viper.IsSet("global.expirationDays") {
