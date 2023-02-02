@@ -45,7 +45,7 @@ func (suite *TestSuite) SetupTest() {
 
 func (suite *TestSuite) TestNewConf() {
 	expectedToken := tokenRequest{
-		Swamid:    "<swamid>",
+		SwamID:    "<swamid>",
 		ProjectID: "<projectid>",
 	}
 
@@ -66,7 +66,7 @@ func (suite *TestSuite) TestNewConf() {
 
 	_, err = readRequestBody(r)
 
-	assert.EqualError(suite.T(), err, "error unmarshaling data")
+	assert.EqualError(suite.T(), err, "unexpected EOF")
 
 	r = io.NopCloser(strings.NewReader(`{
 		"swami": "<swamid>",
@@ -126,7 +126,7 @@ func (suite *TestSuite) TestCreateResponse() {
 
 	requestBody := &tokenRequest{
 		ProjectID: "someproject",
-		Swamid:    "someswam",
+		SwamID:    "someswam",
 	}
 
 	confData := `global:
@@ -153,7 +153,7 @@ func (suite *TestSuite) TestCreateResponse() {
 	// Check that the base64 encoded key in the response is the expected one
 	assert.Equal(suite.T(), "LS0tLS1CRUdJTiBDUllQVDRHSCBQVUJMSUMgS0VZLS0tLS0KdlNvbWUrYXNkL2FwdWJsaWNLZXkKLS0tLS1FTkQgQ1JZUFQ0R0ggUFVCTElDIEtFWS0tLS0t", responseBody.Crypt4ghKey)
 	assert.Equal(suite.T(), requestBody.ProjectID, responseBody.ProjectID)
-	assert.Equal(suite.T(), requestBody.Swamid, responseBody.Swamid)
+	assert.Equal(suite.T(), requestBody.SwamID, responseBody.SwamID)
 
 	defer os.Remove(configName)
 }
