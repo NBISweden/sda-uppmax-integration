@@ -81,14 +81,19 @@ func (suite *TestSuite) TestNewConf() {
 func (suite *TestSuite) TestCreateECToken() {
 
 	confData := `global:
+  crypt4ghKey: ` + suite.Crypt4ghKeyPath + `
+  egaUsername: "some-user"
+  egaPassword: "some-pass"
+  egaURL: "http://ega.dev"
+  expirationDays: 14
   iss: "https://some.url"
   jwtKey: "` + suite.PrivateKeyPath + `"
+  suprUsername: "some-user"
+  suprPassword: "some-pass"
+  suprURL: "http://supr.dev"
+  s3url: "some.s3.url"
   uppmaxUsername: "user"
   uppmaxPassword: "password"
-  s3url: "some.s3.url"
-  expirationDays: 14
-  egaUser: "some-user"
-  crypt4ghKey: "` + suite.Crypt4ghKeyPath + `"
 `
 	configName := "config.yaml"
 	err := os.WriteFile(configName, []byte(confData), 0600)
@@ -130,14 +135,19 @@ func (suite *TestSuite) TestCreateResponse() {
 	}
 
 	confData := `global:
+  crypt4ghKey: ` + suite.Crypt4ghKeyPath + `
+  egaUsername: "some-user"
+  egaPassword: "some-pass"
+  egaURL: "http://ega.dev"
+  expirationDays: 14
   iss: "https://some.url"
   jwtKey: "` + suite.PrivateKeyPath + `"
+  suprUsername: "some-user"
+  suprPassword: "some-pass"
+  suprURL: "http://supr.dev"
+  s3url: "some.s3.url"
   uppmaxUsername: "user"
   uppmaxPassword: "password"
-  s3url: "some.s3.url"
-  expirationDays: 14
-  egaUser: "some-user"
-  crypt4ghKey: "` + suite.Crypt4ghKeyPath + `"
 `
 	configName := "config.yaml"
 	err := os.WriteFile(configName, []byte(confData), 0600)
