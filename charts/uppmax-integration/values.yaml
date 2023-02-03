@@ -11,12 +11,14 @@ global:
   uppmaxPassword: ""
   s3url: ""
   expirationDays: "25"
-  egaUsername: ""
-  egaPassword: ""
-  egaURL: ""
-  suprUsername: ""
-  suprPassword: ""
-  suprURL: ""
+  ega:
+    username: ""
+    password: ""
+    URL: ""
+  supr:
+    username: ""
+    password: ""
+    URL: ""
   crypt4ghKey: ""
   tls:
     enabled: false
