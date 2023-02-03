@@ -3,7 +3,7 @@ package token
 import (
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"net/http"
 	"time"
 
@@ -12,7 +12,7 @@ import (
 )
 
 type EgaHeader struct {
-	ApiVersion       string `json:"apiVersion"`
+	APIVersion       string `json:"apiVersion"`
 	Code             int    `json:"code"`
 	Service          string `json:"service"`
 	DeveloperMessage string `json:"developerMessage"`
@@ -23,9 +23,9 @@ type EgaHeader struct {
 
 type EgaUserResult struct {
 	Username     string `json:"username"`
-	SshPublicKey string `json:"sshPublicKey"`
+	SSHPublicKey string `json:"sshPublicKey"`
 	PasswordHash string `json:"passwordHash"`
-	Uid          int    `json:"uid"`
+	UID          int    `json:"uid"`
 	Gecos        string `json:"gecos"`
 }
 
@@ -40,15 +40,15 @@ type EgaReply struct {
 	Response EgaResponse `json:"response"`
 }
 
-// getEGABoxAccount checks that a given `username` is a valid EGA account, and
-// returns the first username for that account.
-func getEGABoxAccount(username string) (egaUsername string, err error) {
+// verifyEGABoxAccount checks that a given `username` is a valid EGA account, and
+// returns error if the user does not exist.
+func verifyEGABoxAccount(username string) (err error) {
 
-	egaUser := helpers.Config.EgaUser
+	egaUser := helpers.Config.EgaUsername
 	egaPass := helpers.Config.EgaPassword
-	egaUrl := helpers.Config.EgaUrl
+	egaURL := helpers.Config.EgaURL
 
-	url := fmt.Sprintf("%v/%v?idType=username", egaUrl, username)
+	url := fmt.Sprintf("%v/%v?idType=username", egaURL, username)
 
 	client := &http.Client{
 		Timeout: 5 * time.Second,
@@ -56,34 +56,39 @@ func getEGABoxAccount(username string) (egaUsername string, err error) {
 	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
 
-		return "", err
+		return err
 	}
 	req.SetBasicAuth(egaUser, egaPass)
 	resp, err := client.Do(req)
 	if err != nil {
 
-		return "", err
+		return err
 	}
 
 	if resp.StatusCode != 200 {
 
-		message, err := ioutil.ReadAll(resp.Body)
+		message, err := io.ReadAll(resp.Body)
 		if err != nil {
-			return "", err
+			return err
 		}
 		defer resp.Body.Close()
 
-		return "", fmt.Errorf("got %v from EGA", message)
+		return fmt.Errorf("got %v from EGA", message)
 	}
 
 	var reply EgaReply
-	json.NewDecoder(resp.Body).Decode(&reply)
+	err = json.NewDecoder(resp.Body).Decode(&reply)
+	if err != nil {
+
+		return err
+	}
+
 	defer resp.Body.Close()
 	log.Debugf("reply: %v", reply)
 	if len(reply.Response.Result) == 0 {
-		return "", nil
-	}
-	egaUsername = reply.Response.Result[0].Username
 
-	return egaUsername, nil
+		return nil
+	}
+
+	return nil
 }

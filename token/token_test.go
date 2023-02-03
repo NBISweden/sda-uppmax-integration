@@ -99,7 +99,7 @@ func (suite *TestSuite) TestCreateECToken() {
 	err = helpers.NewConf(&helpers.Config)
 	assert.NoError(suite.T(), err)
 
-	tokenString, err := createECToken(helpers.Config.JwtParsedKey, helpers.Config.EgaUser)
+	tokenString, err := createECToken(helpers.Config.JwtParsedKey, helpers.Config.EgaUsername)
 	assert.NoError(suite.T(), err)
 
 	// Parse token to make sure it contains the correct information
@@ -109,7 +109,7 @@ func (suite *TestSuite) TestCreateECToken() {
 	// Check that token includes the correct information
 	assert.Equal(suite.T(), helpers.Config.Username, claims["pilot"])
 	assert.Equal(suite.T(), helpers.Config.Iss, claims["iss"])
-	assert.Equal(suite.T(), helpers.Config.EgaUser, claims["sub"])
+	assert.Equal(suite.T(), helpers.Config.EgaUsername, claims["sub"])
 
 	s3config, _, err := createS3Config("someuser")
 
