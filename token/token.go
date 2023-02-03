@@ -123,7 +123,7 @@ func GetToken(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Check specified swam_id against project_id
-	username, err := getEGABoxAccount(tokenRequest.SwamID)
+	err = verifyEGABoxAccount(tokenRequest.SwamID)
 	if err != nil {
 		currentError := helpers.CreateErrorResponse("Unauthorized to access specified project")
 		w.WriteHeader(http.StatusInternalServerError)
@@ -133,8 +133,17 @@ func GetToken(w http.ResponseWriter, r *http.Request) {
 
 	}
 
+	err = verifyProjectAccount(tokenRequest.SwamID, tokenRequest.ProjectID)
+	if err != nil {
+		currentError := helpers.CreateErrorResponse("Unauthorized to access specified project")
+		w.WriteHeader(http.StatusInternalServerError)
+		fmt.Fprintln(w, string(currentError))
+
+		return
+	}
+
 	// Create token for user corresponding to specified swam_id
-	resp, err := createResponse(tokenRequest, username)
+	resp, err := createResponse(tokenRequest, tokenRequest.SwamID)
 	if err != nil {
 		currentError := helpers.CreateErrorResponse("Unable to create token for specified project")
 		w.WriteHeader(http.StatusInternalServerError)
