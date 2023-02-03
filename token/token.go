@@ -12,8 +12,8 @@ import (
 	b64 "encoding/base64"
 
 	"github.com/NBISweden/sda-uppmax-integration/helpers"
-	"github.com/apex/log"
 	"github.com/golang-jwt/jwt"
+	log "github.com/sirupsen/logrus"
 )
 
 type tokenRequest struct {
