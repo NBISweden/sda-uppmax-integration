@@ -39,11 +39,21 @@ spec:
         env:
         - name: GLOBAL_CRYPT4GHKEY
           value: /secrets/{{ .Values.global.crypt4ghKey }}
-        - name: GLOBAL_EGAUSER
+        - name: GLOBAL_EGAUSERNAME
           valueFrom: 
             secretKeyRef:
               name: {{ include "uppmax-integration.name" . }}-secret
-              key: egaUser
+              key: egaUsername
+        - name: GLOBAL_EGAPASSWORD
+          valueFrom: 
+            secretKeyRef:
+              name: {{ include "uppmax-integration.name" . }}-secret
+              key: egaPassword
+        - name: GLOBAL_EGAURL
+          valueFrom: 
+            secretKeyRef:
+              name: {{ include "uppmax-integration.name" . }}-secret
+              key: egaURL
         - name: GLOBAL_EXPIRATIONDAYS
           value: {{ .Values.global.expirationDays | quote }}
         - name: GLOBAL_ISS
@@ -62,6 +72,21 @@ spec:
             secretKeyRef:
               name: {{ include "uppmax-integration.name" . }}-secret
               key: uppmaxPassword
+        - name: GLOBAL_SUPRUSERNAME
+          valueFrom: 
+            secretKeyRef:
+              name: {{ include "uppmax-integration.name" . }}-secret
+              key: suprUsername
+        - name: GLOBAL_SUPRPASSWORD
+          valueFrom: 
+            secretKeyRef:
+              name: {{ include "uppmax-integration.name" . }}-secret
+              key: suprPassword
+        - name: GLOBAL_SUPRURL
+          valueFrom: 
+            secretKeyRef:
+              name: {{ include "uppmax-integration.name" . }}-secret
+              key: suprURL
         securityContext:
           allowPrivilegeEscalation: false
         volumeMounts:
