@@ -43,7 +43,7 @@ type Conf struct {
 }
 
 // NewConf reads the configuration from the config.yaml file
-func NewConf(conf *Conf) (err error) {
+func NewConf(conf *Conf) error {
 	viper.SetConfigName("config")
 	viper.AddConfigPath(".")
 	viper.AutomaticEnv()
@@ -114,10 +114,12 @@ func NewConf(conf *Conf) (err error) {
 	} else {
 		conf.ExpirationDays = viper.GetInt("global.expirationDays")
 	}
-	conf.JwtParsedKey, err = parsePrivateECKey(conf.JwtKeyPath)
+	JwtParsedKey, err := parsePrivateECKey(conf.JwtKeyPath)
 	if err != nil {
 		return fmt.Errorf("could not parse ec key: %v", err)
 	}
+	conf.JwtParsedKey = JwtParsedKey
+
 	// Parse crypt4gh key and store it as base64 encoded
 	keyBytes, err := os.ReadFile(conf.Crypt4ghKeyPath)
 	if err != nil {
@@ -135,10 +137,10 @@ type errorStruct struct {
 }
 
 // CreateErrorResponse returns a JSON structure containing the error passed in the function
-func CreateErrorResponse(errorMessage string) (errorBytes []byte) {
+func CreateErrorResponse(errorMessage string) []byte {
 	currentError := errorStruct{}
 	currentError.ErrorStruct.Message = errorMessage
-	errorBytes, _ = json.Marshal(currentError)
+	errorBytes, _ := json.Marshal(currentError)
 
 	return errorBytes
 }

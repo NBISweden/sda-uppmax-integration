@@ -108,7 +108,7 @@ type Center struct {
 
 // verifyProjectAccount checks that the given `email` is actually
 // the PI of the given `project_id` and returns error otherwise
-func verifyProjectAccount(username string, projectID string) (err error) {
+func verifyProjectAccount(username string, projectID string) error {
 
 	suprUser := helpers.Config.SuprUsername
 	suprPass := helpers.Config.SuprPassword

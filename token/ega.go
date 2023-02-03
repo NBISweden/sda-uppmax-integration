@@ -42,7 +42,7 @@ type EgaReply struct {
 
 // verifyEGABoxAccount checks that a given `username` is a valid EGA account, and
 // returns error if the user does not exist.
-func verifyEGABoxAccount(username string) (err error) {
+func verifyEGABoxAccount(username string) error {
 
 	egaUser := helpers.Config.EgaUsername
 	egaPass := helpers.Config.EgaPassword
