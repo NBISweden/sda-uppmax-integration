@@ -113,6 +113,14 @@ func createResponse(tokenRequest tokenRequest, username string) (tokenResponse t
 func GetToken(w http.ResponseWriter, r *http.Request) {
 
 	tokenRequest, err := readRequestBody(r.Body)
+
+	// sanitize inputs just in case (and to make CodeQL happy)
+	swamID := strings.ReplaceAll(tokenRequest.SwamID, "\n", "")
+	swamID = strings.ReplaceAll(swamID, "\r", "")
+
+	projectID := strings.ReplaceAll(tokenRequest.ProjectID, "\n", "")
+	projectID = strings.ReplaceAll(projectID, "\r", "")
+
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 	if err != nil {
 		currentError := helpers.CreateErrorResponse("Error reading request body - " + err.Error())
@@ -124,9 +132,9 @@ func GetToken(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Check specified swam_id against project_id
-	err = verifyEGABoxAccount(tokenRequest.SwamID)
+	err = verifyEGABoxAccount(swamID)
 	if err != nil {
-		log.Infof("%v is not a valid ega account", tokenRequest.SwamID)
+		log.Infof("%v is not a valid ega account", swamID)
 		currentError := helpers.CreateErrorResponse("Unauthorized to access specified project")
 		w.WriteHeader(http.StatusInternalServerError)
 		fmt.Fprintln(w, string(currentError))
@@ -134,22 +142,22 @@ func GetToken(w http.ResponseWriter, r *http.Request) {
 		return
 
 	}
-	log.Infof("%v is verified as existing ega account", tokenRequest.SwamID)
+	log.Infof("%v is verified as existing ega account", swamID)
 
-	err = verifyProjectAccount(tokenRequest.SwamID, tokenRequest.ProjectID)
+	err = verifyProjectAccount(swamID, projectID)
 	if err != nil {
 
-		log.Infof("%v is not the PI of SUPR project %v", tokenRequest.SwamID, tokenRequest.ProjectID)
+		log.Infof("%v is not the PI of SUPR project %v", swamID, projectID)
 		currentError := helpers.CreateErrorResponse("Unauthorized to access specified project")
 		w.WriteHeader(http.StatusInternalServerError)
 		fmt.Fprintln(w, string(currentError))
 
 		return
 	}
-	log.Infof("%v verified as the PI of SUPR project %v", tokenRequest.SwamID, tokenRequest.ProjectID)
+	log.Infof("%v verified as the PI of SUPR project %v", swamID, projectID)
 
 	// Create token for user corresponding to specified swam_id
-	resp, err := createResponse(tokenRequest, tokenRequest.SwamID)
+	resp, err := createResponse(tokenRequest, swamID)
 	if err != nil {
 		currentError := helpers.CreateErrorResponse("Unable to create token for specified project")
 		w.WriteHeader(http.StatusInternalServerError)
