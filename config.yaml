@@ -1,11 +1,14 @@
 global:
   crypt4ghKey: ""
-  egaUser: ""
+  egaUsername: ""
   egaPassword: ""
-  egaUrl: ""
+  egaURL: ""
   expirationDays: 14
   iss: ""
   jwtKey: ""
+  suprUsername: ""
+  suprPassword: ""
+  suprURL: ""
   s3url: ""
   uppmaxUsername: ""
   uppmaxPassword: ""
