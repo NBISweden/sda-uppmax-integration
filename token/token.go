@@ -12,6 +12,7 @@ import (
 	b64 "encoding/base64"
 
 	"github.com/NBISweden/sda-uppmax-integration/helpers"
+	"github.com/apex/log"
 	"github.com/golang-jwt/jwt"
 )
 
@@ -125,6 +126,7 @@ func GetToken(w http.ResponseWriter, r *http.Request) {
 	// Check specified swam_id against project_id
 	err = verifyEGABoxAccount(tokenRequest.SwamID)
 	if err != nil {
+		log.Infof("%v is not a valid ega account", tokenRequest.SwamID)
 		currentError := helpers.CreateErrorResponse("Unauthorized to access specified project")
 		w.WriteHeader(http.StatusInternalServerError)
 		fmt.Fprintln(w, string(currentError))
@@ -132,15 +134,19 @@ func GetToken(w http.ResponseWriter, r *http.Request) {
 		return
 
 	}
+	log.Infof("%v is verified as existing ega account", tokenRequest.SwamID)
 
 	err = verifyProjectAccount(tokenRequest.SwamID, tokenRequest.ProjectID)
 	if err != nil {
+
+		log.Infof("%v is not the PI of SUPR project %v", tokenRequest.SwamID, tokenRequest.ProjectID)
 		currentError := helpers.CreateErrorResponse("Unauthorized to access specified project")
 		w.WriteHeader(http.StatusInternalServerError)
 		fmt.Fprintln(w, string(currentError))
 
 		return
 	}
+	log.Infof("%v verified as the PI of SUPR project %v", tokenRequest.SwamID, tokenRequest.ProjectID)
 
 	// Create token for user corresponding to specified swam_id
 	resp, err := createResponse(tokenRequest, tokenRequest.SwamID)
