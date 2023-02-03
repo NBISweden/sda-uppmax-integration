@@ -27,9 +27,9 @@ var Config Conf
 type Conf struct {
 	Crypt4ghKeyPath string
 	Crypt4ghKey     string
-	EgaUser         string
+	EgaUsername     string
 	EgaPassword     string
-	EgaUrl          string
+	EgaURL          string
 	ExpirationDays  int
 	Iss             string
 	JwtKeyPath      string
@@ -37,6 +37,9 @@ type Conf struct {
 	S3URL           string
 	Username        string
 	Password        string
+	SuprUsername    string
+	SuprPassword    string
+	SuprURL         string
 }
 
 // NewConf reads the configuration from the config.yaml file
@@ -65,7 +68,8 @@ func NewConf(conf *Conf) (err error) {
 	}
 
 	requiredConfVars := []string{
-		"global.iss", "global.crypt4ghKey", "global.uppmaxUsername", "global.uppmaxPassword", "global.s3url", "global.egaUser", "global.jwtKey",
+		"global.iss", "global.crypt4ghKey", "global.uppmaxUsername", "global.uppmaxPassword", "global.s3url", "global.jwtKey",
+		"global.suprUsername", "global.suprPassword", "global.suprUrl", "global.egaUsername", "global.egaPassword", "global.egaUrl",
 	}
 
 	for _, s := range requiredConfVars {
@@ -97,10 +101,13 @@ func NewConf(conf *Conf) (err error) {
 	conf.Username = viper.GetString("global.uppmaxUsername")
 	conf.Password = viper.GetString("global.uppmaxPassword")
 	conf.S3URL = viper.GetString("global.s3url")
-	conf.EgaUser = viper.GetString("global.egaUser")
+	conf.EgaUsername = viper.GetString("global.egaUsername")
 	conf.EgaPassword = viper.GetString("global.egaPassword")
-	conf.EgaUrl = viper.GetString("global.egaUrl")
+	conf.EgaURL = viper.GetString("global.egaURL")
 	conf.Crypt4ghKeyPath = viper.GetString("global.crypt4ghKey")
+	conf.SuprPassword = viper.GetString("global.suprPassword")
+	conf.SuprURL = viper.GetString("global.suprURL")
+	conf.SuprUsername = viper.GetString("global.suprUsername")
 
 	if !viper.IsSet("global.expirationDays") {
 		conf.ExpirationDays = 14
