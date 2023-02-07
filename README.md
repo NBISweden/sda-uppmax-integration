@@ -57,12 +57,19 @@ The following configuration is required to run the service
 | Variable     | Description  | Example |
 | ------------ | :----------: | ------: |
 | crypt4ghKey | Path to public key | `../sda_crypt4gh.pub` |
+| egaUsername | The username for the EGA external service | `some_ega_username` |
+| egaPassword | The password for the EGA external service | `some_ega_password` |
+| egaURL | The url for the EGA external service | `https://ega.url` |
 | expirationDays | Token validity duration in days | 14 |
 | iss | JWT issuer | `https://issuer.example.com` |
 | jwtKey | Path to private key | `../my_key.pub` |
+| suprUsername | The username for the SUPR external service | `some_supr_username` |
+| suprPassword | The password for the SUPR external service | `some_supr_password` |
+| suprURL | The url for the SUPR external service | `https://supr.url` |
 | s3url | The URL to the s3Inbox | `s3.example.com` |
 | uppmaxUsername | Username for token requester | `some_username` |
 | uppmaxPassword | Password for token requester | `some_password` |
+
 
 ## How to deploy
 To deploy the service without using vault (e.g. using minikube) in the `lega` namespace, build and push the image using
