@@ -11,7 +11,14 @@ global:
   uppmaxPassword: ""
   s3url: ""
   expirationDays: "25"
-  egaUser: ""
+  ega:
+    username: ""
+    password: ""
+    URL: ""
+  supr:
+    username: ""
+    password: ""
+    URL: ""
   crypt4ghKey: ""
   tls:
     enabled: false
@@ -26,7 +33,7 @@ image:
   repository: harbor.nbis.se/uppmax/integration
   pullPolicy: Always
   # Overrides the image tag whose default is the chart appVersion.
-  tag: "latest"
+  tag: "0.1.1"
 
 imagePullSecrets: []
 nameOverride: ""
