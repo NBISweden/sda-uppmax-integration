@@ -8,7 +8,7 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/suite"
 
-	"github.com/NBISweden/sda-uppmax-integration/testHelpers"
+	"github.com/NBISweden/sda-uppmax-integration/testhelpers"
 )
 
 type TestSuite struct {
@@ -24,7 +24,7 @@ func TestConfigTestSuite(t *testing.T) {
 
 func (suite *TestSuite) SetupTest() {
 	suite.TempDir, _ = os.MkdirTemp(os.TempDir(), "keys-")
-	suite.PrivateKeyPath, _ = testHelpers.CreateECkeys(suite.TempDir)
+	suite.PrivateKeyPath, _ = testhelpers.CreateECkeys(suite.TempDir)
 
 	// Create random public crypt4gh key
 	cryptKey := "-----BEGIN CRYPT4GH PUBLIC KEY-----\nvSome+asd/apublicKey\n-----END CRYPT4GH PUBLIC KEY-----"
