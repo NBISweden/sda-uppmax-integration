@@ -10,7 +10,7 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
-func ping(w http.ResponseWriter, r *http.Request) {
+func ping(w http.ResponseWriter, _ *http.Request) {
 	fmt.Fprint(w, "Pong")
 }
 
