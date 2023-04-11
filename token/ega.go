@@ -48,7 +48,7 @@ func verifyEGABoxAccount(username string) error {
 	egaPass := helpers.Config.EgaPassword
 	egaURL := helpers.Config.EgaURL
 
-	url := fmt.Sprintf("%v/%v?idType=username", egaURL, username)
+	url := fmt.Sprintf("%v/%v", egaURL, username)
 
 	client := &http.Client{
 		Timeout: 5 * time.Second,
