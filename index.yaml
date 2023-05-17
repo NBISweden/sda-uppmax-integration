@@ -3,6 +3,16 @@ entries:
   uppmax-integration:
   - apiVersion: v2
     appVersion: 1.16.0
+    created: "2023-05-17T07:21:36.697548265Z"
+    description: A Helm chart for Kubernetes
+    digest: 215adf80131cdd15899cd35a8f43b21ac2ebb3c4be590ee5bf2531d68f1123ca
+    name: uppmax-integration
+    type: application
+    urls:
+    - https://github.com/NBISweden/sda-uppmax-integration/releases/download/uppmax-integration-0.4.0/uppmax-integration-0.4.0.tgz
+    version: 0.4.0
+  - apiVersion: v2
+    appVersion: 1.16.0
     created: "2023-02-15T09:51:54.279473099Z"
     description: A Helm chart for Kubernetes
     digest: d820725b44dff64edd342fd7688156ba75bc8f9925c1236a47cbd769f56f5a21
@@ -31,4 +41,4 @@ entries:
     urls:
     - https://github.com/NBISweden/sda-uppmax-integration/releases/download/uppmax-integration-0.2.0/uppmax-integration-0.2.0.tgz
     version: 0.2.0
-generated: "2023-02-15T09:51:54.279485899Z"
+generated: "2023-05-17T07:21:36.697561965Z"
