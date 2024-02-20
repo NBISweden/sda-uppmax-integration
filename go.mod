@@ -1,6 +1,6 @@
 module github.com/NBISweden/sda-uppmax-integration
 
-go 1.19
+go 1.20
 
 require (
 	github.com/golang-jwt/jwt v3.2.2+incompatible

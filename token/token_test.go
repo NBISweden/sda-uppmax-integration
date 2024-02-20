@@ -113,7 +113,7 @@ func (suite *TestSuite) TestCreateECToken() {
 	assert.NoError(suite.T(), err)
 
 	// Parse token to make sure it contains the correct information
-	token, _ := jwt.Parse(tokenString, func(tokenElixir *jwt.Token) (interface{}, error) { return nil, nil })
+	token, _ := jwt.Parse(tokenString, func(_ *jwt.Token) (interface{}, error) { return nil, nil })
 	claims, _ := token.Claims.(jwt.MapClaims)
 
 	// Check that token includes the correct information
@@ -176,13 +176,13 @@ func (suite *TestSuite) TestCreateResponse() {
 // TestSuccessfulVerifications uses 2 mock servers for EGA and SUPR, which return StatusOK
 // and sample responses from the two endpoints, containing the same user as in the configuration
 func (suite *TestSuite) TestSuccessfulVerifications() {
-	ega := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+	ega := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, _ *http.Request) {
 		w.WriteHeader(http.StatusOK)
 		_, _ = io.WriteString(w, "{ \"header\": { \"apiVersion\": \"v1\", \"code\": 200, \"service\": \"users\", \"developerMessage\": null, \"userMessage\": \"OK\", \"errorCode\": 0, \"docLink\": \"https://ega-archive.org\" }, \"response\": { \"numTotalResults\": 1, \"resultType\": \"LocalEgaUser\", \"result\": [ { \"username\": \"some.user@nbis.se\", \"sshPublicKey\": null, \"passwordHash\": \"somePasswordHash\", \"uid\": 1234, \"gecos\": null } ] }}")
 	}))
 	defer ega.Close()
 
-	supr := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+	supr := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, _ *http.Request) {
 		w.WriteHeader(http.StatusOK)
 		_, _ = io.WriteString(w, "{\"matches\": [{\"id\": 1234, \"type\": \"Project\", \"name\": \"project-name\", \"title\": \"Test project\", \"directory_name\": \"\", \"directory_name_type\": \"\", \"ngi_project_name\": \"ngi-project-name\", \"abstract\": \"\", \"webpage\": \"\", \"affiliation\": \"Affiliate\", \"classification1\": \"\", \"classification2\": \"\", \"classification3\": \"\", \"managed_in_supr\": true, \"api_opaque_data\": \"\", \"ngi_sensitive_data\": true, \"ngi_ready\": false, \"ngi_delivery_status\": \"\", \"continuation_name\": \"\", \"start_date\": \"2022-09-19\", \"end_date\": \"2022-12-31\", \"pi\": {\"id\": 123, \"first_name\": \"Name\", \"last_name\": \"Lastname\", \"email\": \"some.user@nbis.se\"}, \"members\": [{\"id\": 175, \"first_name\": \"Name\", \"last_name\": \"Lastname\", \"email\": \"some.user@nbis.se\"}], \"links_outgoing\": [], \"links_incoming\": [], \"resourceprojects\": [{\"id\": 123, \"allocated\": 1000, \"resource\": {\"id\": 123, \"name\": \"Grus\", \"capacity_unit\": \"GiB\", \"capacity_unit_2\": \"\", \"centre\": {\"id\": 123, \"name\": \"UPPMAX\"}}, \"decommissioning_state\": \"N/A\", \"allocations\": [{\"id\": 123, \"start_date\": \"2022-09-19\", \"end_date\": \"2022-12-31\", \"allocated\": 1000}]}], \"modified\": \"2022-09-19 14:50:39\"}], \"began\": \"2023-02-06 13:04:31\"}")
 	}))
@@ -227,12 +227,12 @@ func (suite *TestSuite) TestSuccessfulVerifications() {
 
 // TestFailedVerifications uses 2 mock servers for EGA and SUPR, which return StatusNotFound
 func (suite *TestSuite) TestFailedVerifications() {
-	ega := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+	ega := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, _ *http.Request) {
 		w.WriteHeader(http.StatusNotFound)
 	}))
 	defer ega.Close()
 
-	supr := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+	supr := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, _ *http.Request) {
 		w.WriteHeader(http.StatusNotFound)
 	}))
 	defer supr.Close()
@@ -277,13 +277,13 @@ func (suite *TestSuite) TestFailedVerifications() {
 // TestWrongSuprUser tests the case where SUPR returns a project with a user
 // different than the one the request was made for
 func (suite *TestSuite) TestWrongSuprUser() {
-	ega := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+	ega := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, _ *http.Request) {
 		w.WriteHeader(http.StatusOK)
 		_, _ = io.WriteString(w, "{ \"header\": { \"apiVersion\": \"v1\", \"code\": 200, \"service\": \"users\", \"developerMessage\": null, \"userMessage\": \"OK\", \"errorCode\": 0, \"docLink\": \"https://ega-archive.org\" }, \"response\": { \"numTotalResults\": 1, \"resultType\": \"LocalEgaUser\", \"result\": [ { \"username\": \"some.user@nbis.se\", \"sshPublicKey\": null, \"passwordHash\": \"somePasswordHash\", \"uid\": 1234, \"gecos\": null } ] }}")
 	}))
 	defer ega.Close()
 
-	supr := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+	supr := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, _ *http.Request) {
 		w.WriteHeader(http.StatusOK)
 		_, _ = io.WriteString(w, "{\"matches\": [{\"id\": 1234, \"type\": \"Project\", \"name\": \"project-name\", \"title\": \"Test project\", \"directory_name\": \"\", \"directory_name_type\": \"\", \"ngi_project_name\": \"ngi-project-name\", \"abstract\": \"\", \"webpage\": \"\", \"affiliation\": \"Affiliate\", \"classification1\": \"\", \"classification2\": \"\", \"classification3\": \"\", \"managed_in_supr\": true, \"api_opaque_data\": \"\", \"ngi_sensitive_data\": true, \"ngi_ready\": false, \"ngi_delivery_status\": \"\", \"continuation_name\": \"\", \"start_date\": \"2022-09-19\", \"end_date\": \"2022-12-31\", \"pi\": {\"id\": 123, \"first_name\": \"Name\", \"last_name\": \"Lastname\", \"email\": \"some.other.user@nbis.se\"}, \"members\": [{\"id\": 175, \"first_name\": \"Name\", \"last_name\": \"Lastname\", \"email\": \"some.user@nbis.se\"}], \"links_outgoing\": [], \"links_incoming\": [], \"resourceprojects\": [{\"id\": 123, \"allocated\": 1000, \"resource\": {\"id\": 123, \"name\": \"Grus\", \"capacity_unit\": \"GiB\", \"capacity_unit_2\": \"\", \"centre\": {\"id\": 123, \"name\": \"UPPMAX\"}}, \"decommissioning_state\": \"N/A\", \"allocations\": [{\"id\": 123, \"start_date\": \"2022-09-19\", \"end_date\": \"2022-12-31\", \"allocated\": 1000}]}], \"modified\": \"2022-09-19 14:50:39\"}], \"began\": \"2023-02-06 13:04:31\"}")
 	}))
