@@ -49,6 +49,7 @@ func createECToken(key *ecdsa.PrivateKey, username string) (string, error) {
 	token := jwt.New(jwt.SigningMethodES256)
 	// token headers
 	token.Header["alg"] = "ES256"
+	token.Header["kid"] = "sda"
 	// token claims
 	claims := make(jwt.MapClaims)
 	claims["iss"] = helpers.Config.Iss
