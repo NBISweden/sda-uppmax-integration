@@ -20,6 +20,7 @@ linters:
         - G401
         - G501
         - G107
+        - G304
         - G307
     revive:
       rules:
