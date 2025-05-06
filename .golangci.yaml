@@ -1,0 +1,29 @@
+version: "2"
+formatters:
+  enable:
+    - gofmt
+    - goimports
+linters:
+  default: none
+  enable:
+    - bodyclose
+    - gocritic
+    - gosec
+    - govet
+    - nestif
+    - nlreturn
+    - revive
+    - rowserrcheck
+  settings:
+    gosec:
+      excludes:
+        - G401
+        - G501
+        - G107
+        - G304
+        - G307
+    revive:
+      rules:
+      - name: package-comments
+        disabled: true
+
